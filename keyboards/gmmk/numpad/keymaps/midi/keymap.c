@@ -382,6 +382,38 @@ void matrix_scan_user(void) {
     slider();
 }
 
+/*
 void keyboard_post_init_user(void) {
     rgb_matrix_disable_noeeprom();
 }
+*/
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    if (layer_state_cmp(state, 2) || layer_state_cmp(state, 3)) {
+        rgb_matrix_enable_noeeprom();
+    } else {
+        rgb_matrix_disable_noeeprom();
+    }
+    return state;
+}
+
+bool rgb_matrix_indicators_user(void) {
+    if (layer_state_is(2)) {  // If on layer 2
+        for (uint8_t i = 0; i < DRIVER_1_LED_TOTAL; i++) {
+            if (matrix_get_row(i / MATRIX_COLS) & (1U << (i % MATRIX_COLS))) {
+                rgb_matrix_set_color(i, 255, 255, 255);  // Set the color of the pressed key to white
+            }
+        }
+        return true;  // Indicate that custom lighting is set
+    } else if (layer_state_is(3)) {  // If on layer 3
+        for (uint8_t i = 0; i < DRIVER_1_LED_TOTAL; i++) {
+            if (matrix_get_row(i / MATRIX_COLS) & (1U << (i % MATRIX_COLS))) {
+                rgb_matrix_set_color(i, 153, 255, 204);  // Set the color of the pressed key to your desired RGB value
+            }
+        }
+        return true;  // Indicate that custom lighting is set
+    }
+    return false;  // Indicate that custom lighting is not set, and default RGB Matrix behavior should be used
+}
+
+
