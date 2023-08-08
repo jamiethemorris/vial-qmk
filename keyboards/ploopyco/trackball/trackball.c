@@ -47,6 +47,12 @@
 #    define PLOOPY_DRAGSCROLL_MULTIPLIER 0.75  // Variable-DPI Drag Scroll
 #endif
 
+#ifndef PLOOPY_DRAGSCROLL_DENOMINATOR
+    #define PLOOPY_DRAGSCROLL_DENOMINATOR 10
+#endif
+static int _dragscroll_accumulator_x = 0;
+static int _dragscroll_accumulator_y = 0;
+
 keyboard_config_t keyboard_config;
 uint16_t          dpi_array[] = PLOOPY_DPI_OPTIONS;
 #define DPI_OPTION_SIZE ARRAY_SIZE(dpi_array)
@@ -118,19 +124,24 @@ void process_wheel(void) {
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
     process_wheel();
 
-    if (is_drag_scroll) {
-#ifdef PLOOPY_DRAGSCROLL_H_INVERT
-        // Invert horizontal scroll direction
-        mouse_report.h = -mouse_report.x;
-#else
-        mouse_report.h = mouse_report.x;
-#endif
+        if (is_drag_scroll) {
+        _dragscroll_accumulator_x += mouse_report.x;
 #ifdef PLOOPY_DRAGSCROLL_INVERT
         // Invert vertical scroll direction
-        mouse_report.v = -mouse_report.y;
+        _dragscroll_accumulator_y += -mouse_report.y;
 #else
-        mouse_report.v = mouse_report.y;
+        _dragscroll_accumulator_y += mouse_report.y;
 #endif
+        int div_x = _dragscroll_accumulator_x / PLOOPY_DRAGSCROLL_DENOMINATOR;
+        int div_y = _dragscroll_accumulator_y / PLOOPY_DRAGSCROLL_DENOMINATOR;
+        if (div_x != 0) {
+            mouse_report.h += div_x;
+            _dragscroll_accumulator_x -= div_x * PLOOPY_DRAGSCROLL_DENOMINATOR;
+        }
+        if (div_y != 0) {
+            mouse_report.v += div_y;
+            _dragscroll_accumulator_y -= div_y * PLOOPY_DRAGSCROLL_DENOMINATOR;
+        }
         mouse_report.x = 0;
         mouse_report.y = 0;
     }
