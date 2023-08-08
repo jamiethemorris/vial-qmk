@@ -16,15 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "../../trackball.h"
 
+// bool is_drag_scroll = false;
+
+enum {
+    TD_LYR_TGL
+};
+
+tap_dance_action_t tap_dance_actions[] = {};
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // Check if layer 1 is active
+    if (layer_state_cmp(state, 1)) {
+        // Layer 1 is active, enable drag scroll
+        is_drag_scroll = true;
+    } else {
+        // Layer 1 is not active, disable drag scroll
+        is_drag_scroll = false;
+    }
+    return state;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( /* Base */
-        KC_BTN1, KC_BTN3, KC_BTN2,
-          KC_BTN4, LT(1, KC_BTN5)
+        KC_BTN1, KC_BTN3, KC_BTN4,
+          KC_BTN2, TG(1)
     ),
     [1] = LAYOUT(
-        DRAG_SCROLL, _______, _______,
-          _______, _______
+        _______, _______, _______,
+          DPI_CONFIG, TO(0)
+    ),
+    [2] = LAYOUT(
+        _______, _______, _______,
+          _______, TO(0)
+    ),
+    [3] = LAYOUT(
+        _______, _______, _______,
+          _______, TO(0)
+    ),
+    [4] = LAYOUT(
+        _______, _______, _______,
+          _______, TO(0)
     )
 };

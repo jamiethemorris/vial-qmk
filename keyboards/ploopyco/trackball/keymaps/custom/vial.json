@@ -1,0 +1,22 @@
+{
+	"name": "Ploopy Classic Trackball",
+	"vendorId": "0x5043",
+	"productId": "0x5442",
+	"macros": 16,
+	"matrix": {
+		"rows": 0, 
+		"cols": 6
+	},
+	"layouts": {
+		"keymap": [
+			[
+				"0,0", 
+				"0,1", 
+				"0,2", 
+				"0,3",
+                "0,4",
+                "0,5"
+			]
+		]
+	}
+}
