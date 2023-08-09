@@ -3,19 +3,35 @@
 	"vendorId": "0x5043",
 	"productId": "0x5442",
 	"macros": 16,
+	"customKeycodes": [
+        {
+            "name": "DPI Config",
+            "title": "Change DPI",
+            "shortName": "DPI"
+        },
+        {
+            "name": "Drag Scroll",
+            "title": "Toggle Drag Scroll",
+            "shortName": "Scroll"
+        }
+    ],
 	"matrix": {
-		"rows": 0, 
-		"cols": 6
+		"rows": 1, 
+		"cols": 5
 	},
 	"layouts": {
 		"keymap": [
 			[
+				{"x": 0, "y": 0, "h": 2},
 				"0,0", 
+				{"x": 0.5, "y": 0.25, "h": 1.5},
 				"0,1", 
+				{"x": 1, "y": 0, "h": 2},
 				"0,2", 
+				{"x": 2, "y": 0, "h": 2},
 				"0,3",
-                "0,4",
-                "0,5"
+				{"x": 2.5, "y": 0, "h": 2},
+                "0,4"
 			]
 		]
 	}

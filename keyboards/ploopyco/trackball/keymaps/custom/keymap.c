@@ -18,14 +18,6 @@
 #include QMK_KEYBOARD_H
 #include "../../trackball.h"
 
-// bool is_drag_scroll = false;
-
-enum {
-    TD_LYR_TGL
-};
-
-tap_dance_action_t tap_dance_actions[] = {};
-
 layer_state_t layer_state_set_user(layer_state_t state) {
     // Check if layer 1 is active
     if (layer_state_cmp(state, 1)) {

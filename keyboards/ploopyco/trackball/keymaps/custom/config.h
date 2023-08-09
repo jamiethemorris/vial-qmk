@@ -9,3 +9,5 @@
 #define PLOOPY_DRAGSCROLL_DENOMINATOR 180 // Number for drag scroll accumulator
 
 #define DYNAMIC_KEYMAP_LAYER_COUNT 5
+
+#define VIAL_KEYBOARD_UID {0x56, 0xDB, 0x30, 0x67, 0xA4, 0xD3, 0x69, 0xBC}
