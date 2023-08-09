@@ -1,0 +1,13 @@
+#pragma once
+
+// Define DPIs 
+#define PLOOPY_DPI_OPTIONS { 800, 1200, 1600, 2400 }
+#define PLOOPY_DPI_DEFAULT 2
+#define PLOOPY_DRAGSCROLL_FIXED 1
+#define PLOOPY_DRAGSCROLL_INVERT 0
+#define PLOOPY_DRAGSCROLL_DPI 100
+#define PLOOPY_DRAGSCROLL_DENOMINATOR 10 // Number for drag scroll accumulator
+
+#define DYNAMIC_KEYMAP_LAYER_COUNT 5
+
+#define VIAL_KEYBOARD_UID {0x56, 0xDB, 0x30, 0x67, 0xA4, 0xD3, 0x69, 0xBC}
