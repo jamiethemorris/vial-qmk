@@ -6,7 +6,7 @@
 #define PLOOPY_DRAGSCROLL_FIXED 1
 #define PLOOPY_DRAGSCROLL_INVERT 0
 #define PLOOPY_DRAGSCROLL_DPI 100
-#define PLOOPY_DRAGSCROLL_DENOMINATOR 180 // Number for drag scroll accumulator
+#define PLOOPY_DRAGSCROLL_DENOMINATOR 18 // Number for drag scroll accumulator
 
 #define DYNAMIC_KEYMAP_LAYER_COUNT 5
 

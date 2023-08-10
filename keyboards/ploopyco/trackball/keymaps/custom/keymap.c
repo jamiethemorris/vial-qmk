@@ -18,14 +18,92 @@
 #include QMK_KEYBOARD_H
 #include "../../trackball.h"
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    // Check if layer 1 is active
-    if (layer_state_cmp(state, 1)) {
-        // Layer 1 is active, enable drag scroll
-        is_drag_scroll = true;
+bool wheel_layers = true;
+
+void process_wheel_user(int dir) {
+    if (wheel_layers) {
+        switch (get_highest_layer(layer_state)) {
+            case 0:
+                encoder_update_kb(0, dir > 0);
+                break;
+            case 1:
+                dir > 0 ? tap_code(KC_1) : tap_code(KC_2);
+                break;
+            case 2:
+                dir > 0 ? tap_code(KC_4) : tap_code(KC_5);
+                break;
+            case 3:
+                dir > 0 ? tap_code(KC_DOT) : tap_code(KC_COMMA);
+                break;
+            case 4:
+                dir > 0 ? tap_code(KC_7) : tap_code(KC_8);
+                break;
+            default:
+                encoder_update_kb(0, dir > 0);
+                break;
+        }
     } else {
-        // Layer 1 is not active, disable drag scroll
-        is_drag_scroll = false;
+        encoder_update_kb(0, dir > 0);
+    }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case 0:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F13);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 1:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F14);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 2:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F15);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 3:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F16);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 4:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F17);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
     }
     return state;
 }

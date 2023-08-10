@@ -89,6 +89,8 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     return true;
 }
 
+void process_wheel_user(int dir);
+
 void process_wheel(void) {
     // TODO: Replace this with interrupt driven code,  polling is S L O W
     // Lovingly ripped from the Ploopy Source
@@ -118,7 +120,8 @@ void process_wheel(void) {
     int dir = opt_encoder_handler(p1, p2);
 
     if (dir == 0) return;
-    encoder_update_kb(0, dir > 0);
+        process_wheel_user(dir);
+        // encoder_update_kb(0, dir > 0);
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
