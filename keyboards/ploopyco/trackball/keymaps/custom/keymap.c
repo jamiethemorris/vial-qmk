@@ -17,8 +17,10 @@
  */
 #include QMK_KEYBOARD_H
 #include "../../trackball.h"
+#include "qmk_midi.h"
 
 bool wheel_layers = true;
+// static uint8_t volume_level = 64; // Initial volume level
 
 void process_wheel_user(int dir) {
     if (wheel_layers) {
@@ -27,16 +29,28 @@ void process_wheel_user(int dir) {
                 encoder_update_kb(0, dir > 0);
                 break;
             case 1:
-                dir > 0 ? tap_code(KC_1) : tap_code(KC_2);
+                encoder_update_kb(0, dir > 0);
                 break;
             case 2:
-                dir > 0 ? tap_code(KC_4) : tap_code(KC_5);
+                encoder_update_kb(0, dir > 0);
                 break;
             case 3:
                 dir > 0 ? tap_code(KC_DOT) : tap_code(KC_COMMA);
                 break;
+            /* case 4:
+                if (dir > 0) {
+                    volume_level = (volume_level < 127) ? volume_level + 1 : 127;
+                } else {
+                    volume_level = (volume_level > 0) ? volume_level - 1 : 0;
+                }
+                midi_send_cc(&midi_device, 0, 7, volume_level);
+                break; */
             case 4:
-                dir > 0 ? tap_code(KC_7) : tap_code(KC_8);
+                if (dir > 0) {
+                    midi_send_cc(&midi_device, 0, 7, 1); // Increase volume by 1
+                } else {
+                    midi_send_cc(&midi_device, 0, 7, -1); // Decrease volume by 1
+                }
                 break;
             default:
                 encoder_update_kb(0, dir > 0);
