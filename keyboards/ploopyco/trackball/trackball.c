@@ -40,6 +40,9 @@
 #ifndef PLOOPY_DPI_DEFAULT
 #    define PLOOPY_DPI_DEFAULT 0
 #endif
+// #ifdef HANDLE_DPI_CHANGE_FUNCTION
+    void handle_dpi_change(uint8_t dpi_config);
+// #endif
 #ifndef PLOOPY_DRAGSCROLL_DPI
 #    define PLOOPY_DRAGSCROLL_DPI 100  // Fixed-DPI Drag Scroll
 #endif
@@ -168,7 +171,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     }
 
     if (keycode == DPI_CONFIG && record->event.pressed) {
-        keyboard_config.dpi_config = (keyboard_config.dpi_config + 1) % DPI_OPTION_SIZE;
+        keyboard_config.dpi_config = (keyboard_config.dpi_config + 1) % DPI_OPTION_SIZE;        
+// #ifdef HANDLE_DPI_CHANGE_FUNCTION
+        handle_dpi_change(keyboard_config.dpi_config);
+// #endif
         eeconfig_update_kb(keyboard_config.raw);
         pointing_device_set_cpi(dpi_array[keyboard_config.dpi_config]);
     }

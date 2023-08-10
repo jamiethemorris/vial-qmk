@@ -97,6 +97,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             register_code(KC_LCTL);
             register_code(KC_LGUI);
             register_code(KC_LALT);
+            
             register_code(KC_LSFT);
             tap_code(KC_F17);
             unregister_code(KC_LSFT);
@@ -106,6 +107,44 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             break;
     }
     return state;
+}
+
+void handle_dpi_change(uint8_t dpi_index) {
+    switch (dpi_index) {
+        case 0:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F18);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 1:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F19);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 2:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            register_code(KC_LSFT);
+            tap_code(KC_F20);
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+    }
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
