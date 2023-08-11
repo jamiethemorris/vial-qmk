@@ -20,44 +20,115 @@
 #include "qmk_midi.h"
 
 bool wheel_layers = true;
-// static uint8_t volume_level = 64; // Initial volume level
+bool modwheel_enabled = false;
+static uint8_t modwheel_value = 0;
+
+// Logic MIDI Settings for incremental fader movement
+// Format: 2's Compliment
+// Mode: Relative
+
+// Logic MIDI Settings for direct fader values
+// Format: Unsigned
+// Mode: Scaled
+
+void mousewheel_updown(int dir) {
+    encoder_update_kb(0, dir > 0);
+}
+
+void logic_playhead(int dir) {
+    dir > 0 ? tap_code(KC_DOT) : tap_code(KC_COMMA);
+}
+
+void midi_fader_increment(void) {
+    midi_send_cc(&midi_device, 0, 7, 1); // Increase CC7 on channel 0 by 1
+}
+void midi_fader_decrement(void) {
+    midi_send_cc(&midi_device, 0, 7, -1); // Decrease CC7 on channel 0 by 1
+}
+
+void midi_set_fader_zero(void) {
+    midi_send_cc(&midi_device, 1, 7, 90); // Set CC7 to 64 on channel 1
+}
+
+void midi_set_fader_down(void) {
+    midi_send_cc(&midi_device, 1, 7, 0); // Set CC7 to 0 on channel 1
+}
+
+void midi_modwheel_increment(void) {
+    if (modwheel_value < 127) {
+        modwheel_value++;
+    }
+    midi_send_cc(&midi_device, 0, 1, modwheel_value); // Set CC1 on channel 0 to modwheel_value
+}
+
+void midi_modwheel_decrement(void) {
+    if (modwheel_value > 0) {
+        modwheel_value--;
+    }
+    midi_send_cc(&midi_device, 0, 1, modwheel_value); // Set CC1 on channel 0 to modwheel_value
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        switch (keycode) {
+            case SET_FADER_ZERO:
+                midi_set_fader_zero();
+                return false;
+            case SET_FADER_DOWN:
+                midi_set_fader_down();
+                return false;
+            case FADER_INC:
+                midi_fader_increment();
+                return false;
+            case FADER_DEC:
+                midi_fader_decrement();
+                return false;
+            case MODWHEEL_TOGGLE:
+                if (record->event.pressed) {
+                    modwheel_enabled = !modwheel_enabled; // Toggle the mod wheel state
+                }
+                return false;
+        }
+    }
+    return true;
+}
 
 void process_wheel_user(int dir) {
+    if (modwheel_enabled) {
+        if (dir > 0) {
+            midi_modwheel_increment();
+        } else {
+            midi_modwheel_decrement();
+        }
+        return;
+    }
     if (wheel_layers) {
         switch (get_highest_layer(layer_state)) {
             case 0:
-                encoder_update_kb(0, dir > 0);
+                mousewheel_updown(dir);
                 break;
             case 1:
-                encoder_update_kb(0, dir > 0);
+                mousewheel_updown(dir);
                 break;
             case 2:
-                encoder_update_kb(0, dir > 0);
+                mousewheel_updown(dir);
                 break;
             case 3:
-                dir > 0 ? tap_code(KC_DOT) : tap_code(KC_COMMA);
+                logic_playhead(dir);
                 break;
-            /* case 4:
-                if (dir > 0) {
-                    volume_level = (volume_level < 127) ? volume_level + 1 : 127;
-                } else {
-                    volume_level = (volume_level > 0) ? volume_level - 1 : 0;
-                }
-                midi_send_cc(&midi_device, 0, 7, volume_level);
-                break; */
             case 4:
                 if (dir > 0) {
-                    midi_send_cc(&midi_device, 0, 7, 1); // Increase volume by 1
+                    midi_fader_increment();
                 } else {
-                    midi_send_cc(&midi_device, 0, 7, -1); // Decrease volume by 1
+                    midi_fader_decrement();
                 }
                 break;
             default:
-                encoder_update_kb(0, dir > 0);
+                mousewheel_updown(dir);
                 break;
         }
     } else {
-        encoder_update_kb(0, dir > 0);
+        mousewheel_updown(dir);
     }
 }
 

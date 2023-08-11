@@ -41,6 +41,13 @@ extern uint16_t          dpi_array[];
 enum ploopy_keycodes {
     DPI_CONFIG = QK_KB_0,
     DRAG_SCROLL,
+#ifdef EXTRA_USER_KEYCODES
+    SET_FADER_ZERO,
+    SET_FADER_DOWN,
+    FADER_INC,
+    FADER_DEC,
+    MODWHEEL_TOGGLE,
+#endif
 };
 
 extern bool is_drag_scroll;
