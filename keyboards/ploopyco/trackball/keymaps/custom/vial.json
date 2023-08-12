@@ -21,24 +21,14 @@
         },
 		{
             "name": "Fader Down",
-            "title": "Set Fader All The Way Down",
+            "title": "Set Fader to -inf dB",
             "shortName": "FaderDn"
         },
 		{
-            "name": "Fader Increment",
-            "title": "Increment Fader by Defined Amount",
-            "shortName": "FaderInc"
-        },
-		{
-            "name": "Fader Decrement",
-            "title": "Decrement Fader by Defined Amount",
-            "shortName": "FaderDec"
-        },
-		{
-            "name": "ModWheel Toggle",
-			"title": "Toggle Scroll Wheel as ModWheel",
-			"shortName": "ModWhl"
-		}
+            "name": "Fader Multiplier",
+            "title": "Multiply Fader Value Change",
+            "shortName": "FaderMlt"
+        }
     ],
 	"matrix": {
 		"rows": 1, 

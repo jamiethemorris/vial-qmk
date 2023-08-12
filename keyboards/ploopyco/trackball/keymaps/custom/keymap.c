@@ -20,8 +20,10 @@
 #include "qmk_midi.h"
 
 bool wheel_layers = true;
-bool modwheel_enabled = false;
-static uint8_t modwheel_value = 0;
+static int scroll_accumulator = 0;
+static int midi_fader_accumulator_value = 0;
+static int fader_multiplier = 1;
+static bool fader_multiplier_enabled = false;
 
 // Logic MIDI Settings for incremental fader movement
 // Format: 2's Compliment
@@ -35,37 +37,54 @@ void mousewheel_updown(int dir) {
     encoder_update_kb(0, dir > 0);
 }
 
+void mousewheel_accumulator(int dir) {
+    scroll_accumulator += dir;
+
+    if (abs(scroll_accumulator) >= SCROLL_THRESHOLD) {
+        // If the accumulated value reaches the threshold, multiply the effect
+        int multiplier = (abs(scroll_accumulator) >= SCROLL_THRESHOLD) ? SCROLL_MULTIPLIER : 1;
+        bool scroll_up = scroll_accumulator > 0;
+        for (int i = 0; i < multiplier; i++) {
+            encoder_update_kb(0, scroll_up);
+        }
+        scroll_accumulator = 0; // Reset the accumulator after processing
+    }
+}
+
 void logic_playhead(int dir) {
     dir > 0 ? tap_code(KC_DOT) : tap_code(KC_COMMA);
 }
 
-void midi_fader_increment(void) {
+/* void midi_fader_increment(void) {
     midi_send_cc(&midi_device, 0, 7, 1); // Increase CC7 on channel 0 by 1
 }
 void midi_fader_decrement(void) {
     midi_send_cc(&midi_device, 0, 7, -1); // Decrease CC7 on channel 0 by 1
+} */
+
+void midi_fader(int value) {
+    midi_send_cc(&midi_device, 0, 7, value); // Change CC7 on channel 0 by value
+}
+
+void midi_fader_accumulator(int dir) {
+    midi_fader_accumulator_value += dir;
+
+    if (abs(midi_fader_accumulator_value) >= MIDI_FADER_THRESHOLD) {
+        int change = (midi_fader_accumulator_value > 0) ? 1 : -1; // Determine the direction of change
+        int steps = abs(midi_fader_accumulator_value) / MIDI_FADER_THRESHOLD;
+        for (int i = 0; i < steps; i++) {
+            midi_send_cc(&midi_device, 0, 7, change); // Send relative change
+        }
+        midi_fader_accumulator_value = 0; // Reset the accumulator after processing
+    }
 }
 
 void midi_set_fader_zero(void) {
-    midi_send_cc(&midi_device, 1, 7, 90); // Set CC7 to 64 on channel 1
+    midi_send_cc(&midi_device, 1, 7, 90); // Set CC7 to 90 on channel 1 (0dB)
 }
 
 void midi_set_fader_down(void) {
-    midi_send_cc(&midi_device, 1, 7, 0); // Set CC7 to 0 on channel 1
-}
-
-void midi_modwheel_increment(void) {
-    if (modwheel_value < 127) {
-        modwheel_value++;
-    }
-    midi_send_cc(&midi_device, 0, 1, modwheel_value); // Set CC1 on channel 0 to modwheel_value
-}
-
-void midi_modwheel_decrement(void) {
-    if (modwheel_value > 0) {
-        modwheel_value--;
-    }
-    midi_send_cc(&midi_device, 0, 1, modwheel_value); // Set CC1 on channel 0 to modwheel_value
+    midi_send_cc(&midi_device, 1, 7, 0); // Set CC7 to 0 on channel 1 (-inf dB)
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -77,15 +96,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case SET_FADER_DOWN:
                 midi_set_fader_down();
                 return false;
-            case FADER_INC:
-                midi_fader_increment();
-                return false;
-            case FADER_DEC:
-                midi_fader_decrement();
-                return false;
-            case MODWHEEL_TOGGLE:
+            case FADER_MULTIPLIER:
                 if (record->event.pressed) {
-                    modwheel_enabled = !modwheel_enabled; // Toggle the mod wheel state
+                    // If the key is pressed, toggle the multiplier status
+                    fader_multiplier_enabled = !fader_multiplier_enabled;
+                    // Set the multiplier value based on the enabled status
+                    fader_multiplier = fader_multiplier_enabled ? 10 : 1;
+                } else if (fader_multiplier_enabled) {
+                    // If the key is released and the multiplier was enabled by holding, reset it
+                    fader_multiplier_enabled = false;
+                    fader_multiplier = 1;
                 }
                 return false;
         }
@@ -94,18 +114,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_wheel_user(int dir) {
-    if (modwheel_enabled) {
-        if (dir > 0) {
-            midi_modwheel_increment();
-        } else {
-            midi_modwheel_decrement();
-        }
-        return;
-    }
     if (wheel_layers) {
         switch (get_highest_layer(layer_state)) {
             case 0:
-                mousewheel_updown(dir);
+                mousewheel_accumulator(dir);
                 break;
             case 1:
                 mousewheel_updown(dir);
@@ -118,9 +130,11 @@ void process_wheel_user(int dir) {
                 break;
             case 4:
                 if (dir > 0) {
-                    midi_fader_increment();
+                    midi_fader_accumulator(fader_multiplier);  // Increment                    
+                    // midi_fader(1);
                 } else {
-                    midi_fader_decrement();
+                    midi_fader_accumulator(-fader_multiplier); // Decrement
+                    // midi_fader(-1);
                 }
                 break;
             default:

@@ -44,9 +44,7 @@ enum ploopy_keycodes {
 #ifdef EXTRA_USER_KEYCODES
     SET_FADER_ZERO,
     SET_FADER_DOWN,
-    FADER_INC,
-    FADER_DEC,
-    MODWHEEL_TOGGLE,
+    FADER_MULTIPLIER,
 #endif
 };
 
