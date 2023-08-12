@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-/* #include "../../trackball.h"
+#include "../../trackball.h"
 
+/*
 layer_state_t layer_state_set_user(layer_state_t state) {
     // Check if layer 1 is active
     if (layer_state_cmp(state, 1)) {
@@ -29,6 +30,54 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
     return state;
 } */
+
+bool wheel_layers = false;
+static int scroll_accumulator = 0;
+
+void mousewheel_updown(int dir) {
+    encoder_update_kb(0, dir > 0);
+}
+
+void mousewheel_accumulator(int dir) {
+    scroll_accumulator += dir;
+
+    if (abs(scroll_accumulator) >= SCROLL_THRESHOLD) {
+        // If the accumulated value reaches the threshold, multiply the effect
+        int multiplier = (abs(scroll_accumulator) >= SCROLL_THRESHOLD) ? SCROLL_MULTIPLIER : 1;
+        bool scroll_up = scroll_accumulator > 0;
+        for (int i = 0; i < multiplier; i++) {
+            encoder_update_kb(0, scroll_up);
+        }
+        scroll_accumulator = 0; // Reset the accumulator after processing
+    }
+}
+
+void process_wheel_user(int dir) {
+    if (wheel_layers) {
+        switch (get_highest_layer(layer_state)) {
+            case 0:
+                mousewheel_accumulator(dir);
+                break;
+            case 1:
+                mousewheel_updown(dir);
+                break;
+            case 2:
+                mousewheel_updown(dir);
+                break;
+            case 3:
+                mousewheel_updown(dir);
+                break;
+            case 4:
+                mousewheel_updown(dir);
+                break;
+            default:
+                mousewheel_updown(dir);
+                break;
+        }
+    } else {
+        mousewheel_accumulator(dir);
+    }
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( /* Base */

@@ -123,8 +123,11 @@ void process_wheel(void) {
     int dir = opt_encoder_handler(p1, p2);
 
     if (dir == 0) return;
+#ifdef SCROLL_USER
         process_wheel_user(dir);
-        // encoder_update_kb(0, dir > 0);
+#else
+        encoder_update_kb(0, dir > 0);
+#endif
 }
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
