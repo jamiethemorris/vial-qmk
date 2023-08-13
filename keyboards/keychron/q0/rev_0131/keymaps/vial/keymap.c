@@ -26,6 +26,48 @@ enum layers {
     L3
 };
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case 0:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F17);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 1:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F18);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 2:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F19);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 3:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F20);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+    }
+    return state;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_numpad_6x5(
         KC_MUTE,   MO(FUNC), KC_ESC,  KC_BSPC,  KC_TAB,

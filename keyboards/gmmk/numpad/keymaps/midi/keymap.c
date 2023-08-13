@@ -389,10 +389,48 @@ void keyboard_post_init_user(void) {
 */
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    if (layer_state_cmp(state, 2) || layer_state_cmp(state, 3)) {
+	if (layer_state_cmp(state, 2) || layer_state_cmp(state, 3)) {
         rgb_matrix_enable_noeeprom();
     } else {
         rgb_matrix_disable_noeeprom();
+    }
+    switch (get_highest_layer(state)) {
+        case 0:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F13);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 1:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F14);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 2:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F15);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
+        case 3:
+            register_code(KC_LCTL);
+            register_code(KC_LGUI);
+            register_code(KC_LALT);
+            tap_code(KC_F16);
+            unregister_code(KC_LALT);
+            unregister_code(KC_LGUI);
+            unregister_code(KC_LCTL);
+            break;
     }
     return state;
 }
