@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "qmk_midi.h"
 #include "vial.h"
 
-enum custom_keycodes {
-    C_MAJ = SAFE_RANGE,
+enum numpad_keycodes {
+    C_MAJ = QK_KB_0,
     D_MIN,
     E_MIN,
     F_MAJ,
@@ -35,7 +35,8 @@ enum custom_keycodes {
 	MI_7TH,
 	
 	MACRO_0,
-	MACRO_1
+	MACRO_1,
+	MACRO_2
 };
 
 static int8_t octave = 0;  // starts at 0, can be increased or decreased
@@ -70,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [1] = LAYOUT(
     MO(0),   KC_F10,    KC_F11,   KC_F12,
     KC_F7,     KC_F8,   KC_F9,     KC_PPLS,
-    MACRO_1,  KC_F5,     MACRO_0,   KC_CALC,
+    MACRO_1,  MACRO_2,     MACRO_0,   KC_CALC,
     KC_F1,     KC_F2,   KC_F3,     KC_PENT,
     RGB_TOG,                         QK_BOOT
   ),
@@ -78,8 +79,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     MI_A1,   MI_As1,   MI_B1,    MI_OCTD,
     MI_Fs1,  MI_G1,    MI_Gs1,   MI_OCTU,
     MI_Ds1,  MI_E1,    MI_F1,    TO(0),
-    MI_C1,   MI_Cs1,   MI_D1,    MI_BNDU,  // Enter is now pitch wheel up
-    LT(3,TO(3)),                 MI_BNDD // Dot is now pitch wheel down
+    MI_C1,   MI_Cs1,   MI_D1,    MI_BNDU,
+    LT(3,TO(3)),                 MI_BNDD
   ),
   [3] = LAYOUT(
     MI_B2,   MI_E2,   MI_C2,   MI_CHOCTD,
@@ -103,14 +104,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				unregister_code(KC_LSFT);
 				unregister_code(KC_LGUI);
             }
-            return false;  // Skip all further processing of this key
+            return false;  
         case MACRO_1:
             if (record->event.pressed) {
                 register_code(KC_LSFT);
 				tap_code(KC_F5);
 				unregister_code(KC_LSFT);
             }
-            return false;  // Skip all further processing of this key
+            return false;  
+		case MACRO_2:
+            if (record->event.pressed) {
+				tap_code(KC_F5);
+            }
+            return false;  
 			
 	// Transposition
 		case MI_CHOCTU:

@@ -4,6 +4,91 @@
 	"productId": "0x5088",
 	"lighting": "qmk_rgblight",
 	"macros": 16,
+	"vial": {
+		"midi": "advanced"
+	},
+	"customKeycodes": [
+        {
+            "name": "Cmaj",
+            "title": "C Major Chord",
+            "shortName": "Cmaj"
+        },
+		{
+			"name": "Dmin",
+			"title": "D Minor Chord",
+			"shortName": "Dmin"
+		},
+		{
+			"name": "Emin",
+			"title": "E Minor Chord",
+			"shortName": "Emin"
+		},
+		{
+			"name": "Fmaj",
+			"title": "F Major Chord",
+			"shortName": "Fmaj"
+		},
+		{
+			"name": "Gmaj",
+			"title": "G Major Chord",
+			"shortName": "Gmaj"
+		},
+		{
+			"name": "Amin",
+			"title": "A Minor Chord",
+			"shortName": "Amin"
+		},
+		{
+			"name": "Bdim",
+			"title": "B Diminished Chord",
+			"shortName": "Bdim"
+		},
+		{
+			"name": "ChOctUp",
+			"title": "Chord Octave Up",
+			"shortName": "ChOctUp"
+		},
+		{
+			"name": "ChOctDown",
+			"title": "Chord Octave Down",
+			"shortName": "ChOctDn"
+		},
+		{
+			"name": "ChTrsUp",
+			"title": "Chord Transpose Up",
+			"shortName": "ChTrsUp"
+		},
+		{
+			"name": "ChTrsDown",
+			"title": "Chord Transpose Down",
+			"shortName": "ChTrsDown"
+		},
+		{
+			"name": "Chord Modulation",
+			"title": "Convert Major Chord to Minor Chord + Vice Versa",
+			"shortName": "ChMod"
+		},
+		{
+			"name": "Chord 7th",
+			"title": "Add 7th to Chord",
+			"shortName": "Ch7th"
+		},
+		{
+			"name": "Restart Debug",
+			"title": "VS Code Restart Debugging",
+			"shortName": "ReDBG"
+		},
+		{
+			"name": "Stop Debug",
+			"title": "VS Code Stop Debugging",
+			"shortName": "StDBG"
+		},
+		{
+			"name": "Debug",
+			"title": "VS Code Enable Debugging",
+			"shortName": "DBG"
+		}
+    ],
 	"matrix": {
 		"rows": 5, 
 		"cols": 4
