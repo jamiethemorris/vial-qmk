@@ -246,26 +246,77 @@ void handle_dpi_change(uint8_t dpi_index) {
     }
 }
 
+void keyboard_post_init_user(void) {
+    vial_tap_dance_entry_t td0 = { DRAG_SCROLL,
+                                  MO(1),
+                                  KC_NO,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(0, &td0);
+    vial_tap_dance_entry_t td1 = { KC_BTN4,
+                                  KC_NO,
+                                  KC_BTN5,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(1, &td1);
+    vial_tap_dance_entry_t td2 = { KC_BTN2,
+                                  MO(2),
+                                  TG(3),
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(2, &td2);
+    vial_tap_dance_entry_t td3 = { DRAG_SCROLL,
+                                  KC_NO,
+                                  TO(0),
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(3, &td3);
+    vial_tap_dance_entry_t td4 = { KC_BTN2,
+                                  MO(4),
+                                  TG(4),
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(4, &td4);
+    vial_tap_dance_entry_t td5 = { KC_BTN2,
+                                  KC_NO,
+                                  TO(3),
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(5, &td5);
+    vial_tap_dance_entry_t td6 = { KC_V,
+                                  SET_FADER_DOWN,
+                                  KC_NO,
+                                  SET_FADER_ZERO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(6, &td6);
+    vial_tap_dance_entry_t td7 = { KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(7, &td7);
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( /* Base */
-        KC_BTN1, KC_BTN3, KC_BTN4,
-          KC_BTN2, TG(1)
+        KC_BTN1, KC_F13, TD(1),
+          TD(2), TD(0)
     ),
     [1] = LAYOUT(
         _______, _______, _______,
           DPI_CONFIG, TO(0)
     ),
     [2] = LAYOUT(
-        _______, _______, _______,
+        KC_BTN4, _______, KC_BTN5,
           _______, TO(0)
     ),
     [3] = LAYOUT(
-        _______, _______, _______,
-          _______, TO(0)
+        KC_BTN1, _______, KC_V,
+          TD(4), TD(3)
     ),
     [4] = LAYOUT(
-        _______, _______, _______,
-          _______, TO(0)
+        KC_BTN1, FADER_MULTIPLIER, TD(6),
+          TD(5), TD(3)
     )
 };
 
