@@ -11,3 +11,6 @@ LEADER_ENABLE = yes
 
 VPATH += keyboards/keychron/common
 SRC += keychron_common.c
+
+# Disable NKRO for preboot functionality
+NKRO_ENABLE = no
