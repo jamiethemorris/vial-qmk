@@ -257,11 +257,6 @@ TAP DANCE:
 };
 
 #ifdef ENCODER_MAP_ENABLE
-
-#undef NUM_ENCODERS
-#define NUM_ENCODERS 2
-static uint8_t encoder_counter[NUM_ENCODERS] = {0};
-
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU),           ENCODER_CCW_CW(KC_COMM, KC_DOT) }, 
     [1] = { ENCODER_CCW_CW(_______, _______),           ENCODER_CCW_CW(_______, _______) },
@@ -277,35 +272,6 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     #endif
     // [3] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),           ENCODER_CCW_CW(RGB_SAD, RGB_SAI) },
 };
-
-bool encoder_update_kb(uint8_t index, bool clockwise) {
-    // Increment the counter for this encoder
-    encoder_counter[index]++;
-    
-    // Only act on every other rotation
-    if (encoder_counter[index] % 2 == 0) {
-        uint16_t mapped_code = 0;
-        
-        // Fetch current layer
-        uint8_t layer = biton32(layer_state);
-        
-        // Fetch appropriate keycode from encoder_map based on the layer and direction
-        if (clockwise) {
-            mapped_code = pgm_read_word(&encoder_map[layer][index][1]);
-        } else {
-            mapped_code = pgm_read_word(&encoder_map[layer][index][0]);
-        }
-        
-        // If the keycode is not empty or transparent, tap it
-        if (mapped_code != KC_TRNS && mapped_code != KC_NO) {
-            tap_code16(mapped_code);
-        }
-    }
-
-    // Call user function
-    return true;
-}
-
 #endif
 
 void keyboard_post_init_user(void) {
