@@ -32,6 +32,11 @@
 			"name": "Stop Debug",
 			"title": "VS Code Stop Debugging",
 			"shortName": "StDBG"
+		},
+        {
+			"name": "Shift Lock",
+			"title": "Lock shift key for alpha and minus (-)",
+			"shortName": "ShiftLK"
 		}
     ],
     "matrix": { "rows": 10, "cols": 6 },

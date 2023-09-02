@@ -28,6 +28,7 @@
 
 extern bool is_ag_swapped;
 extern bool is_gui_disabled;
+extern bool shift_lock;
 
 static void render_logo(void) {
     static const char PROGMEM qmk_logo[] = {
@@ -59,7 +60,11 @@ static void print_status_narrow(void) {
             oled_write_ln_P(PSTR("Num  "), false);
             break;
         case 5:
+#ifdef RP2040_BUILD
             oled_write_ln_P(PSTR("MIDI "), false);
+#else
+            oled_write_ln_P(PSTR("MISC "), false);
+#endif
             break;
         default:
             oled_write_ln_P(PSTR("Base"), false);
@@ -71,6 +76,8 @@ static void print_status_narrow(void) {
     if (led_usb_state.caps_lock) {
         oled_write_P(PSTR("\n"), false);
         oled_write_ln_P(PSTR("CPSLK"), false);
+    } else if (shift_lock) {
+    oled_write_ln_P(PSTR("SFTLK"), false);
     } else {
         oled_write_ln_P(PSTR("     "), false);
     }

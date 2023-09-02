@@ -25,6 +25,7 @@ bool is_ag_swapped = false;
 bool is_gui_disabled = false;
 static bool alt_gui_swapped = false;
 static bool gui_disabled = false;
+bool shift_lock = false;
 
 enum sofle_layers {
     _DEFAULTS = 0,
@@ -68,7 +69,8 @@ enum custom_keycodes {
 	
 	DEBUG,
 	RESTART_DEBUG,
-	STOP_DEBUG
+	STOP_DEBUG,
+    KC_LOCK_SHIFT
 
 };
 
@@ -183,15 +185,15 @@ TAP DANCE:
 
 [_NUMPAD] = LAYOUT(
   //,------------------------------------------------.                    ,---------------------------------------------------.
-  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_HOME, KC_NUM, KC_PSLS, KC_PAST, KC_PMNS, _______,
+  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_HOME, KC_P7,  KC_P8,   KC_P9,   KC_NUM, _______,
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_END,  KC_P7,  KC_P8,   KC_P9,   KC_PPLS, XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_END,  KC_P4,  KC_P5,   KC_P6,   KC_PPLS, KC_PMNS,
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_PGUP, KC_P4,  KC_P5,   KC_P6,   KC_PPLS, _______,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_PGUP, KC_P1,  KC_P2,   KC_P3,   KC_PENT, XXXXXXX,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,_______,   _______,KC_PGDN, KC_P1,  KC_P2,   KC_P3,   KC_PENT, _______,  
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,_______,   _______,KC_PGDN, KC_P0,  KC_P0,   KC_PDOT, KC_PSLS, KC_PAST,  
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-                 _______, _______, _______, _______,  _______,    _______, _______,  KC_P0,   KC_PDOT, KC_PENT
+                 _______, _______, _______, _______,  _______,    _______, _______,  KC_PENT,  KC_PENT, KC_PENT
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
 ),
 
@@ -219,7 +221,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
   TO(0),  _______,_______, _______, _______, _______,_______,   _______,C_MAJ,  D_MIN,   E_MIN,   F_MAJ,   G_MAJ, _______,  
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-                  MI_CHOCTD, MI_CHOCTU, MI_BNDD, MI_BNDU, _______,    _______, _______,  KC_P0,   KC_PDOT, TO(0)
+                  MI_CHOCTD, MI_CHOCTU, MI_BNDD, MI_BNDU, _______,    _______, _______,  _______, _______, TO(0)
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
 ),
 [_CHORD2] = LAYOUT(
@@ -358,6 +360,30 @@ void toggle_gui(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == KC_LOCK_SHIFT) {
+        if (record->event.pressed) {
+            shift_lock = !shift_lock;  // Toggle the shift lock state
+            if (shift_lock) {
+                register_code(KC_LSFT);
+            } else {
+                unregister_code(KC_LSFT);
+            }
+        }
+        return false;
+    }
+
+    if (shift_lock) {
+        if (record->event.pressed) {
+            if (keycode >= KC_A && keycode <= KC_Z) {
+                register_code(KC_LSFT);
+                return true;
+            } 
+            if (keycode == KC_MINUS) {
+                register_code(KC_LSFT);
+                return true;
+            }
+        }
+    }
     if (alt_gui_swapped) {
         if (record->event.pressed) {
             switch (keycode) {
