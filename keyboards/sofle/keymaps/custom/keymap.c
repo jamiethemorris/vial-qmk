@@ -23,6 +23,8 @@
 
 bool is_ag_swapped = false;
 bool is_gui_disabled = false;
+static bool alt_gui_swapped = false;
+static bool gui_disabled = false;
 
 enum sofle_layers {
     _DEFAULTS = 0,
@@ -90,6 +92,7 @@ ChordData chordData[7];
 #define LT_TAB_NP LT(_NUMPAD,KC_TAB)
 #define LT_SPC_RS LT(_RAISE,KC_SPC)
 #define LT_ENT_LW LT(_LOWER,KC_ENT)
+#define LT_ENT_MS LT(_MOUSE,KC_ENT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -114,31 +117,24 @@ TAP DANCE:
 0: W/Win
 1: M/Mac
 2: G/Game
-3: Gresc/MIDI Layer
+3: Del/MIDI Layer
 4: Minus/Equal
 5: Chord1
 6: Chord2
+
 */
 
 [_QWERTY] = LAYOUT(
   //,------------------------------------------------.                    ,---------------------------------------------------.
-  TD(3), KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+  QK_GESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_BSPC,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  LT_TAB_NP,KC_Q,   TD(0),   KC_E,    KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+  LT_TAB_NP,KC_Q,  TD(0),   KC_E,    KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TD(4),
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   KC_HYPR, KC_A,   KC_S,    KC_D,    KC_F,    TD(2),                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------| 
-  KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   KC_MUTE,    XXXXXXX,KC_N,    TD(1),  KC_COMM,  KC_DOT, KC_SLSH,  KC_ENT,
+  KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   KC_MUTE,    XXXXXXX,KC_N,    TD(1),  KC_COMM,  KC_DOT, KC_SLSH,  TD(3),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-                 KC_LCTL,KC_LALT,KC_LGUI, KC_SPC, LT_ENT_LW,     LT(3,KC_SPACE),LT_SPC_RS,TD(4),KC_LBRC,KC_RBRC
-
-
-
-
-
-
-
-                 
+                 KC_LCTL,KC_LALT,KC_LGUI, KC_SPC, LT_ENT_LW,     LT_ENT_MS,LT_SPC_RS,KC_BSLS,KC_LBRC,KC_RBRC                
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
 ),
 
@@ -148,7 +144,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   _______, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_F12,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  _______, KC_EXLM,KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
+  KC_CAPS, KC_EXLM,KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
   _______, KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR,_______,    _______,KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
@@ -208,7 +204,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   TD(5),    MI_F,   MI_Fs,   MI_G,   MI_Gs,    MI_A,                      MI_F1,   MI_Fs1, MI_G1,   MI_Gs1,  MI_A1, TD(6),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  XXXXXXX,  MI_C,   MI_Cs,   MI_D,   MI_Ds,    MI_E,  _______,    _______,MI_C1,   MI_Cs1, MI_D1,   MI_Ds1,  MI_E1, _______,  
+  TO(0),  MI_C,   MI_Cs,   MI_D,   MI_Ds,    MI_E,  _______,    _______,MI_C1,   MI_Cs1, MI_D1,   MI_Ds1,  MI_E1, _______,  
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
                   MI_OCTD, MI_OCTU, MI_BNDD, MI_BNDU, _______,    _______, _______,  KC_P0,   KC_PDOT, TO(0)
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
@@ -221,7 +217,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   TG(5),    _______,_______, _______, _______, _______,                   A_MIN,  B_DIM,   C_MAJ,   D_MIN,   E_MIN, TG(5),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  _______,  _______,_______, _______, _______, _______,_______,   _______,C_MAJ,  D_MIN,   E_MIN,   F_MAJ,   G_MAJ, _______,  
+  TO(0),  _______,_______, _______, _______, _______,_______,   _______,C_MAJ,  D_MIN,   E_MIN,   F_MAJ,   G_MAJ, _______,  
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
                   MI_CHOCTD, MI_CHOCTU, MI_BNDD, MI_BNDU, _______,    _______, _______,  KC_P0,   KC_PDOT, TO(0)
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
@@ -234,7 +230,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   TG(5),    A_MIN,  B_DIM,   C_MAJ,   D_MIN,   E_MIN,                     _______,_______, _______, _______, _______, TG(5),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  _______,  C_MAJ,  D_MIN,   E_MIN,   F_MAJ,   G_MAJ, _______,    _______,_______,_______, _______, _______, _______, _______,  
+  TO(0),  C_MAJ,  D_MIN,   E_MIN,   F_MAJ,   G_MAJ, _______,    _______,_______,_______, _______, _______, _______, _______,  
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
                   MI_CHOCTD, MI_CHOCTU, MI_BNDD, MI_BNDU, _______,    _______, _______,  KC_P0,   KC_PDOT, TO(0)
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
@@ -248,7 +244,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-  _______, _______, _______, _______, _______, _______,_______,   _______,_______, _______, _______, _______, _______, _______,
+  TO(0), _______, _______, _______, _______, _______,_______,   _______,_______, _______, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
                  _______, _______, _______, _______,  _______,    _______, _______, _______, _______, _______
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
@@ -299,11 +295,11 @@ void keyboard_post_init_user(void) {
                                   MD_GAME,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(2, &td2);
-    vial_tap_dance_entry_t td3 = { QK_GESC,
-                                  MO(5),
-                                  TG(5),
+    vial_tap_dance_entry_t td3 = { KC_DEL,
                                   KC_NO,
-                                  120 };
+                                  KC_NO,
+                                  TG(5),
+                                  TAPPING_TERM };
     dynamic_keymap_set_tap_dance(3, &td3);
     vial_tap_dance_entry_t td4 = { KC_MINS,
                                   KC_EQL,
@@ -323,42 +319,115 @@ void keyboard_post_init_user(void) {
                                   KC_NO,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(6, &td6);
+    vial_tap_dance_entry_t td7 = { KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(7, &td7);
+    vial_tap_dance_entry_t td8 = { KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(8, &td8);
+    vial_tap_dance_entry_t td9 = { KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  KC_NO,
+                                  TAPPING_TERM };
+    dynamic_keymap_set_tap_dance(9, &td9);
+}
+
+void swap_keys(void) {
+    if (!alt_gui_swapped) {
+        // Code to swap ALT and GUI here
+        alt_gui_swapped = true;
+    }
+}
+
+void unswap_keys(void) {
+    if (alt_gui_swapped) {
+        // Code to unswap ALT and GUI here
+        alt_gui_swapped = false;
+    }
+}
+
+void toggle_gui(void) {
+    gui_disabled = !gui_disabled;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-	
+    if (alt_gui_swapped) {
+        if (record->event.pressed) {
+            switch (keycode) {
+                case KC_LALT:
+                    register_code(KC_LGUI);
+                    return false;
+                case KC_LGUI:
+                    register_code(KC_LALT);
+                    return false;
+                case KC_RALT:
+                    register_code(KC_RGUI);
+                    return false;
+                case KC_RGUI:
+                    register_code(KC_RALT);
+                    return false;
+            }
+        } else {
+            switch (keycode) {
+                case KC_LALT:
+                    unregister_code(KC_LGUI);
+                    return false;
+                case KC_LGUI:
+                    unregister_code(KC_LALT);
+                    return false;
+                case KC_RALT:
+                    unregister_code(KC_RGUI);
+                    return false;
+                case KC_RGUI:
+                    unregister_code(KC_RALT);
+                    return false;
+            }
+        }
+    }
+    if (gui_disabled) {
+        if (keycode == KC_LGUI || keycode == KC_RGUI) {
+            return false;  // Block the GUI key
+        }
+    } else {
+        if (keycode == KC_LGUI || keycode == KC_RGUI) {
+            return true;  // Unblock the GUI key
+        }
+    }
+    
+    switch (keycode) {	
 	// Normal macros
         case MD_WIN:
             if (record->event.pressed) {
-                // Perform AG_SWAP
-                tap_code16(AG_SWAP);  // Send AG_SWAP keycode
-                tap_code16(GU_ON);
+                swap_keys();
+                gui_disabled = false;  // Re-enable the GUI key
                 #ifdef OLED_ENABLE
-                is_ag_swapped = true;
-                // is_gui_disabled = false;
+                is_ag_swapped = alt_gui_swapped;
+                is_gui_disabled = gui_disabled;
                 #endif
             }
             return false;
         case MD_MAC:
             if (record->event.pressed) {
-                // Perform AG_NORM
-                tap_code16(AG_NORM);  // Send AG_NORM keycode
-                tap_code16(GU_ON);
+                unswap_keys();
+                gui_disabled = false;  // Re-enable the GUI key
                 #ifdef OLED_ENABLE
-                is_ag_swapped = false;
-                // is_gui_disabled = true;
+                is_ag_swapped = alt_gui_swapped;
+                is_gui_disabled = gui_disabled;
                 #endif
             }
             return false;
         case MD_GAME:
             if (record->event.pressed) {
-                // Toggle GU_TOGG
-                tap_code16(AG_SWAP);  // Send AG_SWAP keycode
-                tap_code16(GU_TOGG);  // Send GU_TOGG keycode
+                toggle_gui();
                 #ifdef OLED_ENABLE
-                // is_gui_disabled = true;
-                is_gui_disabled = !is_gui_disabled;
+                is_gui_disabled = gui_disabled;
                 #endif
             }
             return false;

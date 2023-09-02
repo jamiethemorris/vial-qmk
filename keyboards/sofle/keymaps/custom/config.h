@@ -76,3 +76,5 @@ for more options. */
 #define TAP_CODE_DELAY 0
 
 #define EE_HANDS
+#define VIAL_TAP_DANCE_ENTRIES 10
+// #define RGB_MATRIX_ENABLE
