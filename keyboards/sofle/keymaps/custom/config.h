@@ -56,29 +56,29 @@ for more options. */
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 5, 3, 8 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 0, 0, 0 }
 
-
+// #define RP2040_BUILD
+#define EE_HANDS
 #define GRAVE_ESC_ALT_OVERRIDE
 #define GRAVE_ESC_CTRL_OVERRIDE
 
-// #define RP2040_BUILD
 #ifdef RP2040_BUILD
         #define MIDI_ADVANCED
         #define DYNAMIC_KEYMAP_LAYER_COUNT 8
+        #define VIAL_TAP_DANCE_ENTRIES 16 
+        #define RGB_MATRIX_ENABLE
 #else
         #define DYNAMIC_KEYMAP_LAYER_COUNT 6
+        #define VIAL_TAP_DANCE_ENTRIES 10
 #endif
 
-
+#undef ENCODER_MAP_ENABLE
 #undef TAPPING_TERM
 #undef TAP_CODE_DELAY
 #define TAPPING_TERM 170
+#define TAP_CODE_DELAY 10
 
-#define TAP_CODE_DELAY 0
-
-#define EE_HANDS
-#define VIAL_TAP_DANCE_ENTRIES 10
-// #define RGB_MATRIX_ENABL
-
-#ifdef ENCODER_MAP_ENABLE
-        #undef ENCODER_MAP_ENABLE
-#endif
+#define MOUSEKEY_MOVE_DELTA 8
+#define MOUSEKEY_MAX_SPEED 4
+#define MOUSEKEY_TIME_TO_MAX 15
+#define MOUSEKEY_WHEEL_MAX_SPEED 8
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 40
