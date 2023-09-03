@@ -77,4 +77,8 @@ for more options. */
 
 #define EE_HANDS
 #define VIAL_TAP_DANCE_ENTRIES 10
-// #define RGB_MATRIX_ENABLE
+// #define RGB_MATRIX_ENABL
+
+#ifdef ENCODER_MAP_ENABLE
+        #undef ENCODER_MAP_ENABLE
+#endif

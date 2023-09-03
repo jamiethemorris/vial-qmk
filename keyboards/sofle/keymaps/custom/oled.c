@@ -29,6 +29,8 @@
 extern bool is_ag_swapped;
 extern bool is_gui_disabled;
 extern bool shift_lock;
+extern uint8_t encoder_mode_left;
+extern uint8_t encoder_mode_right;
 
 static void render_logo(void) {
     static const char PROGMEM qmk_logo[] = {
@@ -39,6 +41,10 @@ static void render_logo(void) {
 
     oled_write_P(qmk_logo, false);
 }
+
+const char *encoder_mode_names[] = {
+    "Base ", "Wheel", "Mixer"
+};
 
 static void print_status_narrow(void) {
     // Print current layer
@@ -51,23 +57,31 @@ static void print_status_narrow(void) {
             oled_write_ln_P(PSTR("Lower"), false);
             break;
         case 2:
-            oled_write_ln_P(PSTR("Raise"), false);
+            oled_write_ln_P(PSTR("Arrow"), false);
             break;
         case 3:
             oled_write_ln_P(PSTR("Mouse"), false);
             break;
         case 4:
             oled_write_ln_P(PSTR("Num  "), false);
-            break;
-        case 5:
+            break;        
 #ifdef RP2040_BUILD
+        case 5:
             oled_write_ln_P(PSTR("MIDI "), false);
-#else
-            oled_write_ln_P(PSTR("MISC "), false);
-#endif
             break;
+        case 6:
+            oled_write_ln_P(PSTR("ChrdR"), false);
+            break;
+        case 7:
+            oled_write_ln_P(PSTR("ChrdL"), false);
+            break;
+#else
+        case 5:
+            oled_write_ln_P(PSTR("MISC "), false);
+            break;
+#endif
         default:
-            oled_write_ln_P(PSTR("Base"), false);
+            oled_write_ln_P(PSTR("Base "), false);
             break;
     }
 
@@ -75,9 +89,9 @@ static void print_status_narrow(void) {
     led_t led_usb_state = host_keyboard_led_state();
     if (led_usb_state.caps_lock) {
         oled_write_P(PSTR("\n"), false);
-        oled_write_ln_P(PSTR("CPSLK"), false);
+        oled_write_ln_P(PSTR("CpsLk"), false);
     } else if (shift_lock) {
-    oled_write_ln_P(PSTR("SFTLK"), false);
+    oled_write_ln_P(PSTR("SftLk"), false);
     } else {
         oled_write_ln_P(PSTR("     "), false);
     }
@@ -92,6 +106,17 @@ static void print_status_narrow(void) {
     } else {
         oled_write_ln_P(PSTR("Mac  "), false);
     }
+
+    oled_write_P(PSTR("\n"), false);
+
+    /* oled_write_P(PSTR("\nENL:"), false);
+    oled_write_char(encoder_mode_left + '0', false);
+    oled_write_P(PSTR("\nENR:"), false);
+    oled_write_char(encoder_mode_right + '0', false); */
+
+    oled_write_P(PSTR("\nENCDR"), false);
+    oled_write_P(PSTR("\n"), false);
+    oled_write(encoder_mode_names[encoder_mode_left], false);
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {

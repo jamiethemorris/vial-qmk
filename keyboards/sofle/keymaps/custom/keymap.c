@@ -65,13 +65,23 @@ enum custom_keycodes {
     MI_7TH,
     MODWL_UP,
     MODWL_DN,
+    KC_FDR_UP,
+    KC_FDR_DN,
+    KC_PAN_L,
+    KC_PAN_R,
     #endif
 	
 	DEBUG,
 	RESTART_DEBUG,
 	STOP_DEBUG,
-    KC_LOCK_SHIFT
-
+    KC_LOCK_SHIFT,
+    KC_CMDTAB,
+    KC_CMDGRV,
+#ifndef ENCODER_MAP_ENABLE
+    ENC_MODE_L,
+    ENC_MODE_R,
+    ENC_MODE_LR
+#endif
 };
 
 #ifdef RP2040_BUILD
@@ -97,24 +107,8 @@ ChordData chordData[7];
 #define LT_ENT_MS LT(_MOUSE,KC_ENT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/*
- * QWERTY
- * ,-----------------------------------------.                    ,-----------------------------------------.
- * | GESC |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  | Bspc |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |Tab/NP|   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |  \   |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Caps |   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
- * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  | Enter|
- * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            | LCTR | LAlt | LGUI |LOWER | /Enter  /       \Spc/Rs\  |MOUSE |  -   |  [   |   ]  |
- *            |      |      |      |      |/       /         \      \ |      |      |      |      |
- *            `----------------------------------'           '------''---------------------------'
- */
 
 /*
-
 TAP DANCE: 
 0: W/Win
 1: M/Mac
@@ -123,18 +117,18 @@ TAP DANCE:
 4: Minus/Equal
 5: Chord1
 6: Chord2
-
+7: Shift Lock
 */
 
 [_QWERTY] = LAYOUT(
   //,------------------------------------------------.                    ,---------------------------------------------------.
-  QK_GESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_BSPC,
+  QK_GESC,  KC_1,   KC_2,   KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   LT_TAB_NP,KC_Q,  TD(0),   KC_E,    KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TD(4),
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   KC_HYPR, KC_A,   KC_S,    KC_D,    KC_F,    TD(2),                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------| 
-  KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   KC_MUTE,    XXXXXXX,KC_N,    TD(1),  KC_COMM,  KC_DOT, KC_SLSH,  TD(3),
+  TD(7),   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   ENC_MODE_LR,ENC_MODE_LR,KC_N,TD(1),   KC_COMM, KC_DOT,  KC_SLSH, TD(3),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
                  KC_LCTL,KC_LALT,KC_LGUI, KC_SPC, LT_ENT_LW,     LT_ENT_MS,LT_SPC_RS,KC_BSLS,KC_LBRC,KC_RBRC                
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
@@ -142,15 +136,15 @@ TAP DANCE:
 
 [_LOWER] = LAYOUT(
   //,------------------------------------------------.                    ,---------------------------------------------------.
-  KC_GRV,  KC_F1,   KC_F2,  KC_F3,   KC_F4,   KC_F5,                      KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+  KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  _______, KC_1,    KC_2,   KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_F12,
+  _______, _______, _______, _______, _______, KC_CMDGRV,                 _______, _______, _______, _______, _______, KC_F12,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  KC_CAPS, KC_EXLM,KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
+  KC_CAPS, _______, STOP_DEBUG,DEBUG,RESTART_DEBUG,KC_CMDTAB,             _______, _______, _______, _______, _______, KC_PIPE,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-  _______, KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR,_______,    _______,KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,
+  _______, KC_LSFT, _______, _______, KC_LCBR, KC_RCBR,_______,   _______,KC_LBRC, KC_RBRC, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-                 _______, _______, _______, _______,  _______,    _______, _______, _______, _______, _______
+                 _______, _______, _______, _______,  _______,    _______, _______, MD_WIN, MD_MAC, MD_GAME
 
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
 ),
@@ -270,6 +264,96 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     #endif
     // [3] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),           ENCODER_CCW_CW(RGB_SAD, RGB_SAI) },
 };
+#else
+uint8_t encoder_mode_left = 0;
+uint8_t encoder_mode_right = 0;
+
+void handle_encoder_modes(uint8_t index, bool clockwise) {
+    if (index == 0) {  // left encoder
+            switch (encoder_mode_left) {
+                case 0:
+                    tap_code(clockwise ? KC_VOLU : KC_VOLD);
+                    break;
+                case 1:
+                    tap_code(clockwise ? KC_MS_WH_UP : KC_MS_WH_DOWN);
+                    break;
+#ifdef RP2040_BUILD
+                case 2:
+                    tap_code(clockwise ? KC_FDR_UP : KC_FDR_DN);
+                    break;
+#endif
+            }
+        } else if (index == 1) {  // right encoder
+            switch (encoder_mode_right) {
+                case 0:
+                    tap_code(clockwise ? KC_DOT : KC_COMM);
+                    break;
+                case 1:
+                    tap_code(clockwise ? KC_DOT : KC_COMM);
+                    break;
+#ifdef RP2040_BUILD
+                case 2:
+                    tap_code(clockwise ? KC_PAN_L : KC_PAN_R);
+                    break;
+#endif
+            }
+        }
+}
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (layer_state == 0) {
+        handle_encoder_modes(index, clockwise);
+        return false;
+    } else if (layer_state == 1) {
+        handle_encoder_modes(index, clockwise);
+        return false;
+    } else if (layer_state == 2) {
+        handle_encoder_modes(index, clockwise);
+        return false;
+    } else if (layer_state == 3) {
+        if (index == 0) {  // left encoder
+                tap_code(clockwise ? KC_MS_WH_UP : KC_MS_WH_DOWN);
+        } else if (index == 1) {  // right encoder
+                tap_code(clockwise ? KC_MS_WH_UP : KC_MS_WH_DOWN);
+        }
+        return false;
+    } else if (layer_state == 4) {
+        if (index == 0) {  // left encoder
+                tap_code(clockwise ? RGB_HUI : RGB_HUD);
+        } else if (index == 1) {  // right encoder
+                tap_code(clockwise ? RGB_SAI : RGB_SAD);
+        }
+        return false;
+#ifdef RP2040_BUILD        
+    } else if (layer_state == 5) {
+        if (index == 0) {  // left encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        } else if (index == 1) {  // right encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        }
+        return false;
+    } else if (layer_state == 6) {
+        if (index == 0) {  // left encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        } else if (index == 1) {  // right encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        }
+        return false;
+    } else if (layer_state == 7) {
+        if (index == 0) {  // left encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        } else if (index == 1) {  // right encoder
+                tap_code(clockwise ? MODWL_UP : MODWL_DN);
+        }
+        return false;
+#else
+    } else if (layer_state == 5) {
+        handle_encoder_modes(index, clockwise);
+        return false;
+#endif        
+    }
+    return true;
+}
 #endif
 
 void keyboard_post_init_user(void) {
@@ -321,10 +405,10 @@ void keyboard_post_init_user(void) {
                                   KC_NO,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(6, &td6);
-    vial_tap_dance_entry_t td7 = { KC_NO,
-                                  KC_NO,
-                                  KC_NO,
-                                  KC_NO,
+    vial_tap_dance_entry_t td7 = { KC_LSFT,
+                                  KC_LSFT,
+                                  KC_LOCK_SHIFT,
+                                  KC_LOCK_SHIFT,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(7, &td7);
     vial_tap_dance_entry_t td8 = { KC_NO,
@@ -343,14 +427,12 @@ void keyboard_post_init_user(void) {
 
 void swap_keys(void) {
     if (!alt_gui_swapped) {
-        // Code to swap ALT and GUI here
         alt_gui_swapped = true;
     }
 }
 
 void unswap_keys(void) {
     if (alt_gui_swapped) {
-        // Code to unswap ALT and GUI here
         alt_gui_swapped = false;
     }
 }
@@ -428,6 +510,61 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     
     switch (keycode) {	
+    #ifndef ENCODER_MAP_ENABLE
+    // Encoders
+        case ENC_MODE_L:
+            if (record->event.pressed) {
+                encoder_mode_left++;
+                #ifdef RP2040_BUILD
+                if (encoder_mode_left > 2) {  // adjust for # of encoder modes
+                    encoder_mode_left = 0;
+                }
+                #else
+                if (encoder_mode_left > 1) {  // adjust for # of encoder modes
+                    encoder_mode_left = 0;
+                }
+                #endif
+            }
+            return false;
+        case ENC_MODE_R:
+            if (record->event.pressed) {
+                encoder_mode_right++;
+                #ifdef RP2040_BUILD
+                if (encoder_mode_right > 2) {  // adjust for # of encoder modes
+                    encoder_mode_right = 0;
+                }
+                #else
+                if (encoder_mode_right > 1) {  // adjust for # of encoder modes
+                    encoder_mode_right = 0;
+                }
+                #endif
+            }
+            return false;
+        case ENC_MODE_LR:
+            if (record->event.pressed) {
+                encoder_mode_right++;
+                #ifdef RP2040_BUILD
+                if (encoder_mode_right > 2) {  // adjust for # of encoder modes
+                    encoder_mode_right = 0;
+                }
+                #else
+                if (encoder_mode_right > 1) {  // adjust for # of encoder modes
+                    encoder_mode_right = 0;
+                }
+                #endif
+                encoder_mode_left++;
+                #ifdef RP2040_BUILD
+                if (encoder_mode_left > 2) {  // adjust for # of encoder modes
+                    encoder_mode_left = 0;
+                }
+                #else
+                if (encoder_mode_left > 1) {  // adjust for # of encoder modes
+                    encoder_mode_left = 0;
+                }
+                #endif
+            }
+            return false;            
+    #endif
 	// Normal macros
         case MD_WIN:
             if (record->event.pressed) {
@@ -478,6 +615,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				unregister_code(KC_LSFT);
             }
             return false;  
+        case KC_CMDTAB:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                tap_code(KC_TAB);
+                unregister_code(KC_LGUI);
+            }
+            return false;
+        case KC_CMDGRV:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                tap_code(KC_GRV);
+                unregister_code(KC_LGUI);
+            }
+            return false;
 #ifdef RP2040_BUILD
 
 	// Transposition
