@@ -36,7 +36,12 @@
         {
 			"name": "Shift Lock",
 			"title": "Lock shift key for alpha and minus (-)",
-			"shortName": "ShiftLK"
+			"shortName": "ShftLK"
+		},
+        {
+			"name": "iTerm Visor",
+			"title": "Ctrl+Alt+Cmd+Shft+T",
+			"shortName": "Term"
 		}
     ],
     "matrix": { "rows": 10, "cols": 6 },

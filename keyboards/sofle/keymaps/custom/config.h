@@ -58,6 +58,8 @@ for more options. */
 
 // #define RP2040_BUILD
 #define EE_HANDS
+// #define MASTER_LEFT
+// #define MASTER_RIGHT
 #define GRAVE_ESC_ALT_OVERRIDE
 #define GRAVE_ESC_CTRL_OVERRIDE
 
@@ -65,7 +67,7 @@ for more options. */
         #define MIDI_ADVANCED
         #define DYNAMIC_KEYMAP_LAYER_COUNT 8
         #define VIAL_TAP_DANCE_ENTRIES 16 
-        #define RGB_MATRIX_ENABLE
+        // #define RGB_MATRIX_ENABLE
 #else
         #define DYNAMIC_KEYMAP_LAYER_COUNT 6
         #define VIAL_TAP_DANCE_ENTRIES 10
@@ -82,3 +84,6 @@ for more options. */
 #define MOUSEKEY_TIME_TO_MAX 15
 #define MOUSEKEY_WHEEL_MAX_SPEED 8
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 40
+
+#undef PRODUCT
+#define PRODUCT "Sofle Custom"

@@ -75,8 +75,7 @@ enum custom_keycodes {
 	RESTART_DEBUG,
 	STOP_DEBUG,
     KC_LOCK_SHIFT,
-    KC_CMDTAB,
-    KC_CMDGRV,
+    KC_TERM,
 #ifndef ENCODER_MAP_ENABLE
     ENC_MODE_L,
     ENC_MODE_R,
@@ -105,6 +104,9 @@ ChordData chordData[7];
 #define LT_SPC_RS LT(_RAISE,KC_SPC)
 #define LT_ENT_LW LT(_LOWER,KC_ENT)
 #define LT_ENT_MS LT(_MOUSE,KC_ENT)
+#define ST_DBG STOP_DEBUG
+#define RS_DBG RESTART_DEBUG
+#define DB_DBG DEBUG
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -124,11 +126,11 @@ TAP DANCE:
   //,------------------------------------------------.                    ,---------------------------------------------------.
   QK_GESC,  KC_1,   KC_2,   KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  LT_TAB_NP,KC_Q,  TD(0),   KC_E,    KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TD(4),
+  LT_TAB_NP,KC_Q,  KC_W,   KC_E,    KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TD(4),
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  KC_HYPR, KC_A,   KC_S,    KC_D,    KC_F,    TD(2),                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  TD(8), KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------| 
-  TD(7),   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   ENC_MODE_LR,ENC_MODE_LR,KC_N,TD(1),   KC_COMM, KC_DOT,  KC_SLSH, TD(3),
+  TD(7),   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   ENC_MODE_LR,ENC_MODE_LR,KC_N,KC_M,   KC_COMM, KC_DOT,  KC_SLSH, TD(3),
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
                  KC_LCTL,KC_LALT,KC_LGUI, KC_SPC, LT_ENT_LW,     LT_ENT_MS,LT_SPC_RS,KC_BSLS,KC_LBRC,KC_RBRC                
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
@@ -138,11 +140,11 @@ TAP DANCE:
   //,------------------------------------------------.                    ,---------------------------------------------------.
   KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  _______, _______, _______, _______, _______, KC_CMDGRV,                 _______, _______, _______, _______, _______, KC_F12,
+  _______, _______, _______, _______, _______, KC_P,                      _______, _______, _______, _______, _______, KC_F12,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  KC_CAPS, _______, STOP_DEBUG,DEBUG,RESTART_DEBUG,KC_CMDTAB,             _______, _______, _______, _______, _______, KC_PIPE,
+  KC_CAPS, _______, KC_M,    _______, KC_COMM, KC_DOT,                    _______, ST_DBG,  DB_DBG,  RS_DBG,  _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-  _______, KC_LSFT, _______, _______, KC_LCBR, KC_RCBR,_______,   _______,KC_LBRC, KC_RBRC, _______, _______, _______, _______,
+  _______, _______, KC_BSLS, _______, KC_LCBR, KC_RCBR,_______,   _______,KC_LBRC, KC_RBRC, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
                  _______, _______, _______, _______,  _______,    _______, _______, MD_WIN, MD_MAC, MD_GAME
 
@@ -171,7 +173,7 @@ TAP DANCE:
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   _______, _______, _______, _______, _______, KC_WH_U,                   KC_BTN1, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN2, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-  _______, _______, _______, _______, _______, KC_WH_D,_______,   _______,_______, _______, _______, _______, _______, _______,
+  _______, _______, _______, _______, _______, KC_WH_D,_______,   _______,_______, KC_F13, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
                  _______, _______, _______, _______,  _______,    _______, _______, _______, _______, _______
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
@@ -363,19 +365,19 @@ void keyboard_post_init_user(void) {
     // debug_keyboard=true;
     //debug_mouse=true;
 
-    vial_tap_dance_entry_t td0 = { KC_W,
+    vial_tap_dance_entry_t td0 = { KC_NO,
                                   KC_NO,
                                   KC_NO,
                                   MD_WIN,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(0, &td0);
-    vial_tap_dance_entry_t td1 = { KC_M,
+    vial_tap_dance_entry_t td1 = { KC_NO,
                                   KC_NO,
                                   KC_NO,
                                   MD_MAC,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(1, &td1);
-    vial_tap_dance_entry_t td2 = { KC_G,
+    vial_tap_dance_entry_t td2 = { KC_NO,
                                   KC_NO,
                                   KC_NO,
                                   MD_GAME,
@@ -411,10 +413,10 @@ void keyboard_post_init_user(void) {
                                   KC_LOCK_SHIFT,
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(7, &td7);
-    vial_tap_dance_entry_t td8 = { KC_NO,
-                                  KC_NO,
-                                  KC_NO,
-                                  KC_NO,
+    vial_tap_dance_entry_t td8 = { OSM(MOD_HYPR),
+                                  OSM(MOD_HYPR),
+                                  KC_TERM,
+                                  OSM(MOD_BIT_LCTRL|MOD_BIT_LALT|MOD_BIT_LGUI),
                                   TAPPING_TERM };
     dynamic_keymap_set_tap_dance(8, &td8);
     vial_tap_dance_entry_t td9 = { KC_NO,
@@ -615,18 +617,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				unregister_code(KC_LSFT);
             }
             return false;  
-        case KC_CMDTAB:
+        case KC_TERM:
             if (record->event.pressed) {
                 register_code(KC_LGUI);
-                tap_code(KC_TAB);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                register_code(KC_LCTL);
+                tap_code(KC_T);
                 unregister_code(KC_LGUI);
-            }
-            return false;
-        case KC_CMDGRV:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                tap_code(KC_GRV);
-                unregister_code(KC_LGUI);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LCTL);
             }
             return false;
 #ifdef RP2040_BUILD
@@ -885,4 +886,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		default:
             return true;  // Process all other keycodes normally
     }
+}
+
+uint8_t lock_state = 0;
+
+bool led_update_user(led_t led_state) {
+    if (led_state.num_lock) {
+        layer_on(_MOUSE);  // Turn on MOUSE layer
+    } else {
+        layer_off(_MOUSE); // Turn off MOUSE layer
+    }
+    return true;
 }
