@@ -123,13 +123,18 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }
+    /* if (!is_keyboard_master()) {
+        return OLED_ROTATION_270;
+    } */
     return rotation;
 }
 
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         print_status_narrow();
+        // render_logo();
     } else {
+        // print_status_narrow();
         render_logo();
         // oled_render_anim();
         // print_status_narrow();

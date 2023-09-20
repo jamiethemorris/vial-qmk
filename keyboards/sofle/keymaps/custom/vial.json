@@ -2,6 +2,7 @@
     "name": "Sofle",
     "vendorId": "0xFC32",
     "productId": "0x0287",
+    "lighting": "vialrgb",
     "customKeycodes": [
         {
             "name": "MD_Win",

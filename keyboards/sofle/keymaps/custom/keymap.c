@@ -47,8 +47,18 @@ enum custom_keycodes {
     MD_WIN = QK_KB_0,
     MD_MAC,
     MD_GAME,
-    #ifdef RP2040_BUILD
-    C_MAJ,
+	
+	DEBUG,
+	RESTART_DEBUG,
+	STOP_DEBUG,
+    KC_LOCK_SHIFT,
+    KC_TERM,
+};
+
+#ifdef RP2040_BUILD
+enum midi_keycodes
+{
+    C_MAJ = SAFE_RANGE,
     D_MIN,
     E_MIN,
     F_MAJ,
@@ -69,13 +79,11 @@ enum custom_keycodes {
     KC_FDR_DN,
     KC_PAN_L,
     KC_PAN_R,
-    #endif
-	
-	DEBUG,
-	RESTART_DEBUG,
-	STOP_DEBUG,
-    KC_LOCK_SHIFT,
-    KC_TERM,
+};
+#endif
+
+enum encoder_range_keycodes
+{
 #ifndef ENCODER_MAP_ENABLE
     ENC_MODE_L,
     ENC_MODE_R,
@@ -169,13 +177,13 @@ TAP DANCE:
   //,------------------------------------------------.                    ,---------------------------------------------------.
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______,KC_DEL,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
-  _______, _______, _______, _______, _______, _______,                   _______, KC_BTN4, KC_MS_U, KC_BTN5, _______, _______,
+  _______, _______, _______, _______, _______, _______,                   KC_BTN2, KC_BTN4, KC_MS_U, KC_BTN5, _______, _______,
   //|------+-------+--------+--------+--------+------|                   |--------+--------+--------+--------+--------+---------|
   _______, _______, _______, _______, _______, KC_WH_U,                   KC_BTN1, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN2, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
   _______, _______, _______, _______, _______, KC_WH_D,_______,   _______,_______, KC_F13, _______, _______, _______, _______,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+--------+--------+--------+--------+---------|
-                 _______, _______, _______, _______,  _______,    _______, _______, _______, _______, _______
+                 _______, _______, _______, _______,  _______,    KC_BTN1, _______, _______, _______, _______
   //           \--------+--------+--------+---------+--------|   |--------+--------+--------+---------+-------/
 ),
 
@@ -358,12 +366,27 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif
 
+#ifdef POINTING_DEVICE_ENABLE
+void pointing_device_init_user(void) {
+    // set_auto_mouse_layer(<mouse_layer>); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
+    set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
+}
+
+#endif
+
 void keyboard_post_init_user(void) {
 
     // debug_enable=true;
     // debug_matrix=true;
     // debug_keyboard=true;
     //debug_mouse=true;
+
+    #ifdef RGB_MATRIX_ENABLE
+        rgblight_disable_noeeprom();
+        // rgblight_sethsv_noeeprom(HSV_WHITE);
+        // rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+
+    #endif
 
     vial_tap_dance_entry_t td0 = { KC_NO,
                                   KC_NO,
