@@ -49,6 +49,7 @@
 #undef DEBOUNCE
 #define DEBOUNCE 1
 #define FORCE_NKRO
+#define QMK_KEYS_PER_SCAN 4
 
 #undef PRODUCT
 #define PRODUCT "TOFU60 2.0"
