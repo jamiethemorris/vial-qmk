@@ -16,6 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "muse.h"
+#include "quantum.h"
 
 enum custom_keycodes {
 	DEBUG = QK_KB_0,
@@ -281,13 +282,68 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
       }
     }
   } else {
-    if (clockwise) {
-      register_code(KC_PGDN);
-      unregister_code(KC_PGDN);
-    } else {
-      register_code(KC_PGUP);
-      unregister_code(KC_PGUP);
+    switch (get_highest_layer(layer_state)) {
+        case 0:
+            if (clockwise) {
+                tap_code(KC_VOLU);
+            } else {
+                tap_code(KC_VOLD);
+            }
+            break;
+        case 1:
+            if (clockwise) {
+                tap_code(KC_VOLU);
+            } else {
+                tap_code(KC_VOLD);
+            }
+            break;
+        case 2:
+            if (clockwise) {
+                tap_code(KC_VOLU);
+            } else {
+                tap_code(KC_VOLD);
+            }
+            break;
+        case 3:
+            if (clockwise) {
+                tap_code(KC_PGUP);
+            } else {
+                tap_code(KC_PGDN);
+            }
+            break;
+        case 4:
+            if (clockwise) {
+                tap_code(KC_PGUP);
+            } else {
+                tap_code(KC_PGDN);
+            }
+            break;
+        case 5:
+            if (clockwise) {
+                tap_code(KC_PGUP);
+            } else {
+                tap_code(KC_PGDN);
+            }
+            break;
+
+        case 6:
+            if (clockwise) {
+                tap_code(KC_PGUP);
+            } else {
+                tap_code(KC_PGDN);
+            }
+            break;
+        case 7:
+            if (clockwise) {
+                tap_code(KC_PGUP);
+            } else {
+                tap_code(KC_PGDN);
+            }
+            break;
+        default:
+            break;
     }
+    return false;
   }
     return true;
 }
