@@ -73,24 +73,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LT_SPC_RS:
-            // Immediately select the hold action when another key is pressed.
-            return true;
-        case MT_F_GUI:
-            return true;
-        case MT_D_ALT:
-             return true;
-        case MT_S_CTL:
-             return true;
-        case MT_A_SFT:
-             return true;
-        default:
-            // Do not select the hold action when another key is pressed.
-            return false;
-    }
-}
+
+
+
+
+
 
 bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
