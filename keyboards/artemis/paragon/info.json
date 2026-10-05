@@ -6,8 +6,6 @@
     "diode_direction": "COL2ROW",
     "features": {
         "bootmagic": true,
-        "command": false,
-        "console": false,
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
@@ -17,12 +15,6 @@
         "lto": true
     },
     "processor": "atmega32u4",
-    "url": "",
-    "encoder": {
-        "rotary": [
-            { "pin_a": "D3", "pin_b": "D5", "resolution": 2 }
-        ]
-    },
     "usb": {
         "device_version": "1.0.0",
         "pid": "0x3449",
