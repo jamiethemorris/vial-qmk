@@ -147,6 +147,11 @@ typedef struct qmk_settings_proto_t {
 
 void qmk_settings_init(void);
 void qmk_settings_reset(void);
+/* Customize defaults before they are saved on initialization or a GUI reset. */
+void qmk_settings_reset_user(qmk_settings_t *settings);
+/* Apply per-key exceptions to the corresponding GUI toggle. */
+bool qmk_settings_permissive_hold_user(uint16_t keycode, keyrecord_t *record, bool enabled);
+bool qmk_settings_retro_tapping_user(uint16_t keycode, keyrecord_t *record, bool enabled);
 void qmk_settings_query(uint16_t qsid_gt, void *buffer, size_t sz);
 int qmk_settings_get(uint16_t qsid, void *setting, size_t maxsz);
 int qmk_settings_set(uint16_t qsid, const void *setting, size_t maxsz);

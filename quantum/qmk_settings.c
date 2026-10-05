@@ -187,6 +187,8 @@ void qmk_settings_init(void) {
     }
 }
 
+__attribute__((weak)) void qmk_settings_reset_user(qmk_settings_t *settings) {}
+
 void qmk_settings_reset(void) {
     QS.grave_esc_override = 0;
     QS.auto_shift = 0;
@@ -215,6 +217,7 @@ void qmk_settings_reset(void) {
     QS.tapping_toggle = TAPPING_TOGGLE;
     QS.flow_tap_term = 0;
 
+    qmk_settings_reset_user(&QS);
     eeprom_settings_save();
 
     /* must call clear_keyboard for the NKRO setting to not cause stuck keys */
@@ -289,8 +292,12 @@ uint16_t qs_get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     return QS.tapping_term;
 }
 
+__attribute__((weak)) bool qmk_settings_permissive_hold_user(uint16_t keycode, keyrecord_t *record, bool enabled) {
+    return enabled;
+}
+
 bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-    return QS_tapping_permissive_hold;
+    return qmk_settings_permissive_hold_user(keycode, record, QS_tapping_permissive_hold);
 }
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
@@ -301,8 +308,12 @@ uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
     return QS.quick_tap_term;
 }
 
+__attribute__((weak)) bool qmk_settings_retro_tapping_user(uint16_t keycode, keyrecord_t *record, bool enabled) {
+    return enabled;
+}
+
 bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
-    return QS_tapping_retro_tapping;
+    return qmk_settings_retro_tapping_user(keycode, record, QS_tapping_retro_tapping);
 }
 
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {

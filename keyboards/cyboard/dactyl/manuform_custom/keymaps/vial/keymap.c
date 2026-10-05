@@ -4,6 +4,7 @@
 
 #include QMK_KEYBOARD_H
 #include "qmk_midi.h"
+#include "qmk_settings.h"
 #include "features/mouse_turbo_click.h"
 
 bool is_ag_swapped = false;
@@ -207,41 +208,40 @@ TAP DANCE:
     )
 };
 
-bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+void qmk_settings_reset_user(qmk_settings_t *settings) {
+    // Preserve the custom defaults without overwriting saved GUI edits on boot.
+    settings->grave_esc_override = GRAVE_ESC_ALT_OVERRIDE_Defined | (GRAVE_ESC_CTRL_OVERRIDE_Defined << 1)
+                                  | (GRAVE_ESC_GUI_OVERRIDE_Defined << 2) | (GRAVE_ESC_SHIFT_OVERRIDE_Defined << 3);
+    settings->quick_tap_term = QUICK_TAP_TERM;
+    settings->tapping_v2 = (1 << QS_tapping_permissive_hold_bit) | (1 << QS_tapping_retro_tapping_bit);
+}
+
+bool qmk_settings_permissive_hold_user(uint16_t keycode, keyrecord_t *record, bool enabled) {
     switch (keycode) {
         case LT_SPC_RS:
-            // Immediately select the hold action when another key is pressed.
-            return true;
         case MT_SPC_GUI:
-            return true;
         case MT_F_GUI:
-            return true;
         case MT_D_ALT:
-             return true;
         case MT_S_CTL:
-             return true;
         case MT_A_SFT:
-             return true;
         case MT_G_GUI:
-             return true;
         case MT_V_CTL:
-             return true;
         case MT_G_GUI_L1:
-             return true;
         case MT_V_CTL_L1:
-            return true;
+            // Only these keys follow the GUI's Permissive Hold toggle.
+            return enabled;
         default:
-            // Do not select the hold action when another key is pressed.
             return false;
     }
 }
 
-bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
+bool qmk_settings_retro_tapping_user(uint16_t keycode, keyrecord_t *record, bool enabled) {
     switch (keycode) {
         case MT_SPC_GUI:
+            // Releasing a held GUI key must never produce an unwanted Space.
             return false;
         default:
-            return true;
+            return enabled;
     }
 }
 
